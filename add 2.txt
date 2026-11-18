@@ -1,0 +1,73 @@
+#!/bin/bash
+echo "Enter filename"
+read fileName
+
+ch=0
+while [ "$ch" -ne 6 ]
+do
+    echo -e "\nChoose one of the following"
+    echo "1. Create a new address book"
+    echo "2. View records"
+    echo "3. Insert a new record"
+    echo "4. Delete a record"
+    echo "5. Modify a record"
+    echo "6. Exit"
+    read ch
+
+    case $ch in
+    1)
+        > "$fileName"          
+        count=1
+        while [ "$count" -gt 0 ]
+        do
+            read -p "Enter Name: " name
+            read -p "Enter phone number: " phno
+            read -p "Enter address: " add
+            echo "$name $phno $add" >> "$fileName"
+            read -p "Enter 0 to exit, 1 to continue: " count
+        done
+        ;;
+    2)
+        if [ -s "$fileName" ]; then
+            cat "$fileName"
+        else
+            echo "File exist nahi karti ya empty hai."
+        fi
+        ;;
+    3)
+        read -p "Enter Name: " name
+        read -p "Enter phone number: " phno
+        read -p "Enter address: " add
+        echo "$name $phno $add" >> "$fileName"
+        echo "Record inserted."
+        ;;
+    4)
+        read -p "Enter name or phone number to delete: " pattern
+        if grep -q "$pattern" "$fileName"; then
+            grep -v "$pattern" "$fileName" > temp
+            mv temp "$fileName"
+            echo "Record deleted."
+        else
+            echo "Record not found."
+        fi
+        ;;
+    5)
+        read -p "Enter name or phone number to modify: " pattern
+        if grep -q "$pattern" "$fileName"; then
+            read -p "Enter new Name: " name
+            read -p "Enter new phone number: " phno
+            read -p "Enter new address: " add
+            sed -i "/$pattern/s/.*/$name $phno $add/" "$fileName"
+            echo "Record modified."
+        else
+            echo "Record not found."
+        fi
+        ;;
+    6)
+        echo "Love you!"
+        ;;
+    *)
+        echo "Invalid choice."
+        ;;
+    esac
+done

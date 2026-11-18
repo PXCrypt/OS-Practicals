@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    int a[20], n, i, j, temp, pid;
+    char *args[25];
+    char buf[20][12];
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    // Parent array ko sort karta hai (bubble sort)
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("[Parent] Sorted array: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+
+    // Array ko strings mein badlo (execve ko strings chahiye)
+    args[0] = "./reverse";
+    for (i = 0; i < n; i++) {
+        sprintf(buf[i], "%d", a[i]);
+        args[i + 1] = buf[i];
+    }
+    args[n + 1] = NULL;     // list ka end
+
+    pid = fork();
+
+    if (pid < 0) {
+        printf("Fork failed\n");
+    }
+    else if (pid == 0) {
+        // CHILD
+        execve("./reverse", args, NULL);
+        printf("execve failed\n");   // ye tabhi chalega jab execve fail ho
+    }
+    else {
+        // PARENT
+        wait(NULL);
+        printf("[Parent] Child finished.\n");
+    }
+    return 0;
+}
+
+
+nano reverse.c
+nano parent.c
+gcc reverse.c -o reverse
+gcc parent.c -o parent
+./parent

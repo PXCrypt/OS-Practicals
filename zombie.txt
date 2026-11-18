@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main() {
+    int pid = fork();
+
+    if (pid == 0) {
+        // Child turant khatam
+        printf("[Child] PID = %d, exiting now\n", getpid());
+        exit(0);
+    }
+    else {
+        // Parent wait nahi karta, 20 sec soyega
+        printf("[Parent] PID = %d, sleeping for 20 sec (no wait)\n", getpid());
+        sleep(20);
+        printf("[Parent] Done\n");
+    }
+    return 0;
+}
+
+gcc zombie.c -o zombie
+./zombie &
+ps -l

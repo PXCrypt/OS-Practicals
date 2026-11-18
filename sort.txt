@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+// Bubble sort (parent use karega)
+void bubble(int a[], int n) {
+    int i, j, temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (a[j] > a[j + 1]) {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Selection sort (child use karega)
+void selection(int a[], int n) {
+    int i, j, min, temp;
+    for (i = 0; i < n - 1; i++) {
+        min = i;
+        for (j = i + 1; j < n; j++) {
+            if (a[j] < a[min])
+                min = j;
+        }
+        temp = a[i];
+        a[i] = a[min];
+        a[min] = temp;
+    }
+}
+
+void display(int a[], int n) {
+    int i;
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
+int main() {
+    int a[50], n, i, pid;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    pid = fork();
+
+    if (pid < 0) {
+        printf("Fork failed\n");
+    }
+    else if (pid == 0) {
+        // CHILD process
+        printf("\n[Child] PID = %d, Parent PID = %d\n", getpid(), getppid());
+        selection(a, n);
+        printf("[Child] Sorted (Selection sort): ");
+        display(a, n);
+    }
+    else {
+        // PARENT process
+        printf("\n[Parent] PID = %d, Child PID = %d\n", getpid(), pid);
+        bubble(a, n);
+        printf("[Parent] Sorted (Bubble sort): ");
+        display(a, n);
+        wait(NULL);   // child ke khatam hone ka wait
+        printf("[Parent] Child finished. Parent exiting.\n");
+    }
+    return 0;
+}
+
+nano sort.c
+gcc sort.c -o sort
+./sort

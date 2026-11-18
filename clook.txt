@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int req[50], n, head, i, j, temp, total = 0;
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+    printf("Enter request queue: ");
+    for (i = 0; i < n; i++)
+        scanf("%d", &req[i]);
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    // sort karo (chhota se bada)
+    for (i = 0; i < n - 1; i++)
+        for (j = 0; j < n - i - 1; j++)
+            if (req[j] > req[j + 1]) {
+                temp = req[j];
+                req[j] = req[j + 1];
+                req[j + 1] = temp;
+            }
+
+    // head se bada pehla request dhundo
+    i = 0;
+    while (i < n && req[i] < head)
+        i++;
+
+    printf("\nC-LOOK Path: %d", head);
+
+    // upar ki taraf, sabse bade request tak
+    for (j = i; j < n; j++) {
+        total = total + abs(req[j] - head);
+        head = req[j];
+        printf(" -> %d", head);
+    }
+
+    // sabse chhote request pe jump, phir upar chalo
+    for (j = 0; j < i; j++) {
+        total = total + abs(req[j] - head);
+        head = req[j];
+        printf(" -> %d", head);
+    }
+    printf("\nTotal Head Movement = %d\n", total);
+    return 0;
+}

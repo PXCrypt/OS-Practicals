@@ -1,0 +1,13 @@
+# data.txt file same folder mein honi chahiye
+
+# ---- GREP ----
+grep "banana" data.txt
+grep -i "apple" data.txt
+grep -n "banana" data.txt
+grep -c "banana" data.txt
+grep -v "banana" data.txt
+
+# ---- SED ----
+sed 's/banana/mango/' data.txt
+sed -n '2p' data.txt
+sed '3d' data.txt

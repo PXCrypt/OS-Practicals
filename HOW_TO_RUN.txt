@@ -1,0 +1,9 @@
+Pendrive se Linux mein copy karke run karne ke liye:
+
+   cd folder_ka_path
+   bash 01_arithmetic.sh
+
+(Pendrive pe chmod +x kaam nahi karta, isliye "bash filename" use karo.
+Agar Linux home folder mein copy kar liya ho to:
+   chmod +x 01_arithmetic.sh
+   ./01_arithmetic.sh )

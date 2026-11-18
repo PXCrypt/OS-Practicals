@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main() {
+    int pid = fork();
+
+    if (pid == 0) {
+        // Child
+        printf("[Child] PID = %d, Parent PID = %d\n", getpid(), getppid());
+        sleep(5);   // parent ko khatam hone ka time do
+        printf("[Child] Now Parent PID = %d\n", getppid());
+    }
+    else {
+        // Parent turant khatam
+        printf("[Parent] PID = %d, exiting now\n", getpid());
+        exit(0);
+    }
+    return 0;
+}
+
+gcc orphan.c -o orphan
+./orphan
